@@ -1,6 +1,6 @@
 package org.example.factory.afterLSP;
 
-public class Human extends Mammal implements Workable, Eatable {
+public class Human implements Workable, Eatable {
   @Override
   public void work() {
     System.out.println("Human is working");
