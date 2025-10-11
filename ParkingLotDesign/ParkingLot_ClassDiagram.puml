@@ -1,0 +1,350 @@
+@startuml Parking_Lot_System_Class_Diagram
+
+!theme plain
+skinparam classAttributeIconSize 0
+skinparam classFontStyle bold
+skinparam packageStyle rectangle
+
+title Parking Lot System - Complete Class Diagram
+
+' Core Domain Classes
+package "Core Domain" {
+    class Vehicle {
+        - licenseNumber: String
+        - type: VehicleType
+        + Vehicle(licenseNumber: String, type: VehicleType)
+        + getLicenseNumber(): String
+        + getType(): VehicleType
+    }
+    
+    enum VehicleType {
+        CAR
+        BUS  
+        TRUCK
+    }
+    
+    class ParkingSpot {
+        - id: String
+        - spotType: SpotType
+        - isOccupied: boolean
+        - parkedVehicle: Vehicle
+        + ParkingSpot(id: String, spotType: SpotType)
+        + canFitVehicle(vehicle: Vehicle): boolean
+        + parkVehicle(vehicle: Vehicle): void
+        + removeVehicle(): void
+        + isOccupied(): boolean
+        + getId(): String
+        + getSpotType(): SpotType
+        + getParkedVehicle(): Vehicle
+    }
+    
+    enum SpotType {
+        SMALL
+        MEDIUM
+        LARGE
+    }
+    
+    class ParkingTicket {
+        - ticketId: String
+        - vehicle: Vehicle
+        - spotId: String
+        - spotType: String
+        - entryTime: long
+        + ParkingTicket(ticketId: String, vehicle: Vehicle, spotId: String, spotType: String)
+        + getTicketId(): String
+        + getVehicle(): Vehicle
+        + getSpotId(): String
+        + getSpotType(): String
+        + getEntryTime(): long
+    }
+}
+
+' Interfaces
+package "Interfaces" {
+    interface IParkingLot {
+        + addFloor(floor: ParkingFloor): void
+        + getFloors(): List<ParkingFloor>
+        + changeStrategy(strategy: ParkingStrategy): void
+        + issueTicket(ticket: ParkingTicket): void
+        + getTicket(ticketId: String): ParkingTicket
+        + getSpotById(spotId: String): ParkingSpot
+        + removeTicket(ticketId: String): void
+        + isParkingLotFull(): void
+    }
+    
+    interface IParkingFloor {
+        + addSpot(spot: ParkingSpot): void
+        + getAvailableSpot(vehicle: Vehicle): ParkingSpot
+        + getFloorId(): String
+        + isUnderMaintenance(): boolean
+        + setUnderMaintenance(status: boolean): void
+        + showFloorDisplay(): void
+        + isFull(): boolean
+    }
+    
+    interface IParkingSpot {
+        + canFitVehicle(vehicle: Vehicle): boolean
+        + parkVehicle(vehicle: Vehicle): void
+        + removeVehicle(): void
+        + isOccupied(): boolean
+        + getId(): String
+        + getParkedVehicle(): Vehicle
+    }
+}
+
+' Core Management Classes  
+package "Core Management" {
+    class ParkingLot {
+        - floors: List<ParkingFloor>
+        - entryPanel: EntryPanel
+        - exitPanel: ExitPanel
+        - activeTickets: Map<String, ParkingTicket>
+        + ParkingLot(strategy: ParkingStrategy)
+        + addFloor(floor: ParkingFloor): void
+        + getFloors(): List<ParkingFloor>
+        + getEntryPanel(): EntryPanel
+        + getExitPanel(): ExitPanel
+        + changeStrategy(strategy: ParkingStrategy): void
+        + issueTicket(ticket: ParkingTicket): void
+        + getTicket(ticketId: String): ParkingTicket
+        + setExitPanel(exitPanel: ExitPanel): void
+        + isParkingLotFull(): void
+        + getSpotById(spotId: String): ParkingSpot
+        + removeTicket(ticketId: String): void
+    }
+    
+    class ParkingFloor {
+        - floorId: String
+        - spotMap: Map<SpotType, Set<ParkingSpot>>
+        - displayPanel: FloorDisplayPanel
+        - underMaintenance: boolean
+        + ParkingFloor(floorId: String)
+        + addSpot(spot: ParkingSpot): void
+        + getAvailableSpot(vehicle: Vehicle): ParkingSpot
+        + getAllSpots(): Set<ParkingSpot>
+        + getFloorId(): String
+        + isUnderMaintenance(): boolean
+        + setUnderMaintenance(status: boolean): void
+        + getSpotMap(): Map<SpotType, Set<ParkingSpot>>
+        + showFloorDisplay(): void
+        + isFull(): boolean
+    }
+}
+
+' Strategy Pattern
+package "Strategy Pattern" {
+    interface ParkingStrategy {
+        + findSpot(vehicle: Vehicle, parkingLot: ParkingLot): ParkingSpot
+    }
+    
+    class NearestAvailableSpotStrategy {
+        + findSpot(vehicle: Vehicle, parkingLot: ParkingLot): ParkingSpot
+    }
+    
+    class RandomSpotStrategy {
+        + findSpot(vehicle: Vehicle, parkingLot: ParkingLot): ParkingSpot
+    }
+}
+
+' Payment System
+package "Payment System" {
+    interface PaymentProcessor {
+        + processPayment(amount: double): void
+    }
+    
+    class CardPaymentProcessor {
+        + processPayment(amount: double): void
+    }
+    
+    class CashPaymentProcessor {
+        + processPayment(amount: double): void
+    }
+}
+
+' Panel Management
+package "Panel Management" {
+    class EntryPanel {
+        - strategy: ParkingStrategy
+        - displayPanel: EntryDisplayPanel
+        - ticketCounter: int
+        + EntryPanel(strategy: ParkingStrategy)
+        + changeStrategy(strategy: ParkingStrategy): void
+        + parkVehicle(vehicle: Vehicle, parkingLot: ParkingLot): ParkingTicket
+    }
+    
+    class ExitPanel {
+        - displayPanel: ExitDisplayPanel
+        - paymentProcessor: PaymentProcessor
+        - parkingLot: ParkingLot
+        + ExitPanel(paymentProcessor: PaymentProcessor)
+        + setParkingLot(parkingLot: ParkingLot): void
+        + unparkVehicle(ticket: ParkingTicket): void
+    }
+}
+
+' Display System
+package "Display System" {
+    abstract class DisplayPanel {
+        + {abstract} display(): void
+    }
+    
+    class EntryDisplayPanel {
+        + displaySpotAssigned(vehicle: Vehicle, spot: ParkingSpot): void
+        + display(): void
+        + displayTicketIssued(ticket: ParkingTicket): void
+    }
+    
+    class ExitDisplayPanel {
+        + displayCost(vehicle: Vehicle, cost: double): void
+        + display(): void
+    }
+    
+    class FloorDisplayPanel {
+        - floorId: String
+        + FloorDisplayPanel(floorId: String)
+        + displayAvailableSpots(spotMap: Map<SpotType, Set<ParkingSpot>>, underMaintenance: boolean): void
+        + display(): void
+    }
+}
+
+' Factory Pattern
+package "Factory Pattern" {
+    class ParkingSpotFactory {
+        + {static} createSpot(id: String, type: SpotType): ParkingSpot
+        + {static} createSmallSpot(id: String): ParkingSpot
+        + {static} createMediumSpot(id: String): ParkingSpot
+        + {static} createLargeSpot(id: String): ParkingSpot
+    }
+    
+    class PaymentProcessorFactory {
+        + {static} createCardProcessor(): PaymentProcessor
+        + {static} createCashProcessor(): PaymentProcessor
+        + {static} createProcessor(type: String): PaymentProcessor
+    }
+}
+
+' Builder Pattern
+package "Builder Pattern" {
+    class ParkingLotBuilder {
+        - strategy: ParkingStrategy
+        - paymentProcessor: PaymentProcessor
+        + ParkingLotBuilder()
+        + withStrategy(strategy: ParkingStrategy): ParkingLotBuilder
+        + withPaymentProcessor(paymentProcessor: PaymentProcessor): ParkingLotBuilder
+        + withCardPayment(): ParkingLotBuilder
+        + withCashPayment(): ParkingLotBuilder
+        + build(): ParkingLot
+    }
+}
+
+' Configuration
+package "Configuration" {
+    class ParkingConfiguration {
+        - {static} BASE_RATE: double
+        - {static} HOURLY_RATE: double
+        - {static} TICKET_ID_START: int
+        + {static} getBaseRate(): double
+        + {static} getHourlyRate(): double
+        + {static} getTicketIdStart(): int
+        + {static} calculateCost(durationInSeconds: long): double
+    }
+}
+
+' Exception Handling
+package "Exception Handling" {
+    class ParkingLotException {
+        + ParkingLotException(message: String)
+        + ParkingLotException(message: String, cause: Throwable)
+    }
+    
+    class NoSpotAvailableException {
+        + NoSpotAvailableException(vehicleType: String)
+    }
+    
+    class TicketNotFoundException {
+        + TicketNotFoundException(ticketId: String)
+    }
+    
+    class SpotNotFoundException {
+        + SpotNotFoundException(spotId: String)
+    }
+}
+
+' Main Classes
+package "Application" {
+    class Main {
+        + {static} main(args: String[]): void
+    }
+    
+    class ModularMain {
+        + {static} main(args: String[]): void
+    }
+}
+
+' Relationships - Core Domain
+Vehicle ||--|| VehicleType : has
+ParkingSpot ||--|| SpotType : has
+ParkingTicket ||--|| Vehicle : references
+
+' Relationships - Implementations
+ParkingLot ..|> IParkingLot : implements
+ParkingFloor ..|> IParkingFloor : implements
+ParkingSpot ..|> IParkingSpot : implements
+
+' Relationships - Strategy Pattern
+NearestAvailableSpotStrategy ..|> ParkingStrategy : implements
+RandomSpotStrategy ..|> ParkingStrategy : implements
+
+' Relationships - Payment System
+CardPaymentProcessor ..|> PaymentProcessor : implements
+CashPaymentProcessor ..|> PaymentProcessor : implements
+
+' Relationships - Display System
+EntryDisplayPanel --|> DisplayPanel : extends
+ExitDisplayPanel --|> DisplayPanel : extends
+FloorDisplayPanel --|> DisplayPanel : extends
+
+' Relationships - Exception Hierarchy
+NoSpotAvailableException --|> ParkingLotException : extends
+TicketNotFoundException --|> ParkingLotException : extends
+SpotNotFoundException --|> ParkingLotException : extends
+
+' Relationships - Composition/Aggregation
+ParkingLot "1" *-- "many" ParkingFloor : contains
+ParkingLot "1" *-- "1" EntryPanel : has
+ParkingLot "1" *-- "1" ExitPanel : has
+ParkingLot "1" *-- "many" ParkingTicket : manages
+
+ParkingFloor "1" *-- "many" ParkingSpot : contains
+ParkingFloor "1" *-- "1" FloorDisplayPanel : has
+
+EntryPanel "1" *-- "1" ParkingStrategy : uses
+EntryPanel "1" *-- "1" EntryDisplayPanel : has
+
+ExitPanel "1" *-- "1" PaymentProcessor : uses
+ExitPanel "1" *-- "1" ExitDisplayPanel : has
+ExitPanel "1" o-- "1" ParkingLot : references
+
+' Relationships - Factory Pattern
+ParkingSpotFactory ..> ParkingSpot : creates
+PaymentProcessorFactory ..> PaymentProcessor : creates
+
+' Relationships - Builder Pattern
+ParkingLotBuilder ..> ParkingLot : builds
+ParkingLotBuilder ..> ParkingStrategy : uses
+ParkingLotBuilder ..> PaymentProcessor : uses
+
+' Relationships - Configuration
+ExitPanel ..> ParkingConfiguration : uses
+
+note top of ParkingTicket : Refactored to store only\nspotId and spotType strings\ninstead of ParkingSpot object
+
+note right of ParkingLot : Implements IParkingLot interface\nfor better modularity
+
+note bottom of ParkingStrategy : Strategy pattern allows\ndifferent spot allocation\nalgorithms
+
+note left of PaymentProcessor : Payment processing is\nextensible through this\ninterface
+
+note top of ParkingLotBuilder : Builder pattern for\nflexible ParkingLot\nconfiguration
+
+@enduml
