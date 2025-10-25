@@ -1,6 +1,6 @@
-package org.example.afterOCP;
+package org.example.ocp;
 
-public class ShapeSquare implements Shape {
+public class ShapeSquare {
     private double sideLength;
 
     public ShapeSquare(double sideLength) {
@@ -13,10 +13,5 @@ public class ShapeSquare implements Shape {
 
     public void setSideLength(double sideLength) {
         this.sideLength = sideLength;
-    }
-
-    @Override
-    public double calculateArea() {
-        return sideLength * sideLength;
     }
 }

@@ -1,41 +1,46 @@
 package org.example.afterPreferCompositionOverInheritance;
 
-import org.example.afterPreferCompositionOverInheritance.behaviour.FlyBehaviour;
-import org.example.afterPreferCompositionOverInheritance.behaviour.SwimBehaviour;
-import org.example.afterPreferCompositionOverInheritance.behaviour.WalkBehaviour;
+public class BaseDuck {
+  private int hands;
 
+  private int legs;
 
-public abstract class BaseDuck {
-
-  private String hands;
-
-  private String beak;
-
-  private String legs;
-
-  public SwimBehaviour swimBehavior;
+  private int beak;
 
   public FlyBehaviour flyBehaviour;
 
-  public WalkBehaviour walkBehavior;
+  public WalkBehaviour walkBehaviour;
 
-  public BaseDuck(String hands, String beak, String legs, SwimBehaviour swimBehavior, FlyBehaviour flyBehaviour,
-      WalkBehaviour walkBehavior) {
+  public SqueakBehaviour squeakBehaviour;
+
+
+
+  public BaseDuck(int hands, int legs, int beak,
+                  FlyBehaviour flyBehaviour,
+                  WalkBehaviour walkBehaviour,
+                  SqueakBehaviour squeakBehaviour) {
     this.hands = hands;
-    this.beak = beak;
     this.legs = legs;
-    this.swimBehavior = swimBehavior;
+    this.beak = beak;
+    this.squeakBehaviour = squeakBehaviour;
     this.flyBehaviour = flyBehaviour;
-    this.walkBehavior = walkBehavior;
+    this.walkBehaviour = walkBehaviour;
+
+  }
+
+  public void fly() {
+    flyBehaviour.fly();
+  }
+
+  public void squeak() {
+    squeakBehaviour.squeak();
+  }
+
+  public void walk() {
+    walkBehaviour.walk();
   }
 
   public void swim() {
-    swimBehavior.swim();
-  }
-
-  public abstract void fly();
-
-  public void walk() {
-    walkBehavior.walk();
+    swimBehaviour.swim();
   }
 }

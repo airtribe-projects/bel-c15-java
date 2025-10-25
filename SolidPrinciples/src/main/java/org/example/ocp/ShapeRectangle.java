@@ -1,6 +1,6 @@
-package org.example.afterOCP;
+package org.example.ocp;
 
-public class ShapeRectangle implements Shape {
+public class ShapeRectangle {
 
   private double length;
   private double width;
@@ -26,8 +26,4 @@ public class ShapeRectangle implements Shape {
     this.width = width;
   }
 
-  @Override
-  public double calculateArea() {
-    return length * width;
-  }
 }

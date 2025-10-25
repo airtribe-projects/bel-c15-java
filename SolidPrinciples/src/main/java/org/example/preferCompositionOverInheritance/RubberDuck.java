@@ -1,16 +1,16 @@
 package org.example.preferCompositionOverInheritance;
 
-import javax.naming.OperationNotSupportedException;
+public class RubberDuck extends Duck {
 
+  private String rubberType;
 
-public class RubberDuck extends BaseDuck {
-
-  public RubberDuck(String hands, String beak, String legs) {
-    super(hands, beak, legs);
+  public RubberDuck(int hands, int legs, int beak, String rubberType) {
+    super(hands, legs, beak);
+    this.rubberType = rubberType;
   }
 
   @Override
-  public void fly() throws OperationNotSupportedException {
-    throw new OperationNotSupportedException("Rubber ducks cannot fly");
+  public void squeak() {
+    System.out.println("Rubber duck not squeak");
   }
 }

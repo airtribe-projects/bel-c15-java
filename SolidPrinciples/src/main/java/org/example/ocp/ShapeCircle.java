@@ -1,6 +1,6 @@
-package org.example.afterOCP;
+package org.example.ocp;
 
-public class ShapeCircle implements Shape {
+public class ShapeCircle {
   private double radius;
 
   public ShapeCircle(double radius) {
@@ -13,10 +13,5 @@ public class ShapeCircle implements Shape {
 
   public void setRadius(double radius) {
     this.radius = radius;
-  }
-
-  @Override
-  public double calculateArea() {
-    return Math.PI * radius * radius;
   }
 }
