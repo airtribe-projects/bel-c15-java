@@ -4,26 +4,27 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import org.example.factory.PaymentProcessorFactory;
-import org.example.interfaces.IParkingLot;
 import org.example.panels.EntryPanel;
 import org.example.panels.ExitPanel;
 import org.example.parkingFloor.ParkingFloor;
 import org.example.parkingStrategy.ParkingStrategy;
 import org.example.parkingticket.ParkingTicket;
+import org.example.payment.CardPaymentProcessor;
+import org.example.payment.PaymentProcessor;
+import org.example.coststrategy.CostComputationStrategy;
+import org.example.coststrategy.StandardCostComputationStrategy;
 
 
-public class ParkingLot implements IParkingLot  {
+public class ParkingLot {
     private final List<ParkingFloor> floors;
     private final EntryPanel entryPanel;
     private ExitPanel exitPanel;
     private final Map<String, ParkingTicket> activeTickets = new HashMap<>();
 
-    public ParkingLot(ParkingStrategy strategy) {
+    public ParkingLot(ParkingStrategy strategy, PaymentProcessor paymentProcessor, CostComputationStrategy costStrategy) {
         this.floors = new ArrayList<>();
         this.entryPanel = new EntryPanel(strategy);
-        this.exitPanel = new ExitPanel(PaymentProcessorFactory.createCardProcessor());
-        this.exitPanel.setParkingLot(this);
+        this.exitPanel = new ExitPanel(paymentProcessor, costStrategy);
     }
 
     public void addFloor(ParkingFloor floor) {
@@ -58,6 +59,17 @@ public class ParkingLot implements IParkingLot  {
         this.exitPanel = exitPanel;
     }
 
+    public ParkingSpot getSpotById(String spotId) {
+        for (ParkingFloor floor : floors) {
+            ParkingSpot spot = floor.getSpotById(spotId);
+            if (spot != null) {
+                return spot;
+            }
+        }
+        return null;
+    }
+
+
 
     public void isParkingLotFull() {
         for (ParkingFloor floor : floors) {
@@ -67,21 +79,6 @@ public class ParkingLot implements IParkingLot  {
             }
         }
         System.out.println("Parking lot is full.");
-    }
-
-    public ParkingSpot getSpotById(String spotId) {
-        for (ParkingFloor floor : floors) {
-            for (ParkingSpot spot : floor.getAllSpots()) {
-                if (spot.getId().equals(spotId)) {
-                    return spot;
-                }
-            }
-        }
-        return null;
-    }
-
-    public void removeTicket(String ticketId) {
-        activeTickets.remove(ticketId);
     }
 
 }

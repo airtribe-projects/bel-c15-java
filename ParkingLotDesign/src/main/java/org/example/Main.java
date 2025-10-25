@@ -1,14 +1,17 @@
 package org.example;
 
+import org.example.coststrategy.StandardCostComputationStrategy;
 import org.example.parkingFloor.ParkingFloor;
 import org.example.parkingStrategy.NearestAvailableSpotStrategy;
 import org.example.parkingStrategy.RandomSpotStrategy;
 import org.example.parkingticket.ParkingTicket;
+import org.example.payment.CardPaymentProcessor;
 
 
 public class Main {
     public static void main(String[] args) throws InterruptedException {
-        ParkingLot lot = new ParkingLot(new NearestAvailableSpotStrategy());
+        ParkingLot lot = new ParkingLot(new NearestAvailableSpotStrategy(), new CardPaymentProcessor(), new StandardCostComputationStrategy());
+        ParkingLot lot2 = new ParkingLot(new RandomSpotStrategy(), new CardPaymentProcessor(), new StandardCostComputationStrategy());
         // step by step -> builder pattern
 
         ParkingFloor floor1 = new ParkingFloor("F1");
@@ -48,9 +51,9 @@ public class Main {
         Thread.sleep(2000);
 
         // Unpark vehicles
-        lot.getExitPanel().unparkVehicle(t1);
-        lot.getExitPanel().unparkVehicle(t2);
-        lot.getExitPanel().unparkVehicle(t3);
+        lot.getExitPanel().unparkVehicle(t1, lot);
+        lot.getExitPanel().unparkVehicle(t2, lot);
+        lot.getExitPanel().unparkVehicle(t3, lot);
 
         // Change strategy and retry parking
         System.out.println("Switching to Random Spot Strategy...");
@@ -60,7 +63,7 @@ public class Main {
         ParkingTicket t6 = lot.getEntryPanel().parkVehicle(truck2, lot);
 
         Thread.sleep(1000);
-        lot.getExitPanel().unparkVehicle(t4);
-        lot.getExitPanel().unparkVehicle(t6);
+        lot.getExitPanel().unparkVehicle(t4, lot);
+        lot.getExitPanel().unparkVehicle(t6, lot);
     }
 }

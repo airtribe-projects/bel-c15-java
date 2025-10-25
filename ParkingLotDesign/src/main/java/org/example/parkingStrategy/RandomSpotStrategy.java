@@ -16,6 +16,7 @@ public class RandomSpotStrategy implements ParkingStrategy {
     Collections.shuffle(floors);
     for (ParkingFloor floor : floors) {
       if (floor.isUnderMaintenance()) continue;
+
       ParkingSpot spot = floor.getAvailableSpot(vehicle);
       if (spot != null) return spot;
     }

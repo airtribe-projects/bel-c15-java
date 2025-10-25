@@ -38,4 +38,8 @@ public class ParkingTicket {
     public long getEntryTime() {
         return entryTime;
     }
+
+    public String printTicket() {
+        return "Ticket ID: " + ticketId + ", Vehicle: " + vehicle.getLicenseNumber() + ", Spot ID: " + spotId + ", Spot Type: " + spotType + ", Entry Time: " + entryTime;
+    }
 }

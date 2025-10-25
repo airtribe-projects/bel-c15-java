@@ -8,10 +8,9 @@ import org.example.ParkingSpot;
 import org.example.SpotType;
 import org.example.Vehicle;
 import org.example.displayPanel.FloorDisplayPanel;
-import org.example.interfaces.IParkingFloor;
 
 
-public class ParkingFloor implements IParkingFloor {
+public class ParkingFloor {
     private final String floorId;
     private final Map<SpotType, Set<ParkingSpot>> spotMap;
     private final FloorDisplayPanel displayPanel;
@@ -32,7 +31,7 @@ public class ParkingFloor implements IParkingFloor {
     }
 
     public ParkingSpot getAvailableSpot(Vehicle vehicle) {
-
+        //KISS
       if (underMaintenance) {
         return null;
       }
@@ -77,7 +76,6 @@ public class ParkingFloor implements IParkingFloor {
     }
 
     public boolean isFull() {
-
         for (Set<ParkingSpot> spots : spotMap.values()) {
             for (ParkingSpot spot : spots) {
                 if (!spot.isOccupied()) {
@@ -86,5 +84,16 @@ public class ParkingFloor implements IParkingFloor {
             }
         }
         return true; // All spots are occupied
+    }
+
+    public ParkingSpot getSpotById(String spotId) {
+        for (Set<ParkingSpot> spots : spotMap.values()) {
+            for (ParkingSpot spot : spots) {
+                if (spot.getId().equals(spotId)) {
+                    return spot;
+                }
+            }
+        }
+        return null;
     }
 }
