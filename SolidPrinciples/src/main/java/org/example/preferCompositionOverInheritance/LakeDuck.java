@@ -1,15 +1,18 @@
 package org.example.preferCompositionOverInheritance;
 
-public class LakeDuck extends Duck {
+public class LakeDuck extends BaseDuck {
 
-  public String waterType;
 
-  public LakeDuck(int hands, int legs, int beak, String waterType) {
-    super(hands, legs, beak);
-    this.waterType = waterType;
+  public LakeDuck(String hands, String beak, String legs) {
+    super(hands, beak, legs);
   }
 
   public void swim() {
-    System.out.println("Swimming in the lake with hands and legs");
+    System.out.println("Lake duck swims with " + getBeak() + " beak.");
+  }
+
+  @Override
+  public void fly() {
+
   }
 }

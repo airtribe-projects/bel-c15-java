@@ -1,22 +1,22 @@
 package org.example.afterOCP;
 
 public class ShapeSquare implements Shape {
-    private double sideLength;
+  private String length;
 
-    public ShapeSquare(double sideLength) {
-        this.sideLength = sideLength;
-    }
+  public ShapeSquare(String length) {
+    this.length = length;
+  }
 
-    public double getSideLength() {
-        return sideLength;
-    }
+  public String getLength() {
+    return length;
+  }
 
-    public void setSideLength(double sideLength) {
-        this.sideLength = sideLength;
-    }
+  public void setLength(String length) {
+    this.length = length;
+  }
 
-    @Override
-    public double calculateArea() {
-        return sideLength * sideLength;
-    }
+  @Override
+  public double calculateArea() {
+    return Math.pow(Double.parseDouble(length), 2);
+  }
 }

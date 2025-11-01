@@ -1,6 +1,7 @@
 package org.example.builder;
 
 public class Car {
+
   private String engine;
 
   private int wheels;
@@ -20,6 +21,15 @@ public class Car {
     this.color = color;
     this.gas = gas;
     this.sunRoof = sunRoof;
+  }
+
+  public Car() {
+    this.engine = "";
+    this.wheels = 0;
+    this.airConditioning = "";
+    this.color = "";
+    this.gas = false;
+    this.sunRoof = false;
   }
 
   public String getEngine() {

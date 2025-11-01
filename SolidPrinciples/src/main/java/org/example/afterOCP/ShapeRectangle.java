@@ -1,33 +1,32 @@
 package org.example.afterOCP;
 
 public class ShapeRectangle implements Shape {
+  private String length;
+  private String width;
 
-  private double length;
-  private double width;
-
-  public ShapeRectangle(double length, double width) {
+  public ShapeRectangle(String length, String width) {
     this.length = length;
     this.width = width;
   }
 
-  public double getLength() {
+  public String getLength() {
     return length;
   }
 
-  public void setLength(double length) {
+  public void setLength(String length) {
     this.length = length;
   }
 
-  public double getWidth() {
+  public String getWidth() {
     return width;
   }
 
-  public void setWidth(double width) {
+  public void setWidth(String width) {
     this.width = width;
   }
 
   @Override
   public double calculateArea() {
-    return length * width;
+    return Double.parseDouble(length) * Double.parseDouble(width);
   }
 }

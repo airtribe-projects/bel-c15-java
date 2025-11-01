@@ -1,22 +1,22 @@
 package org.example.afterOCP;
 
 public class ShapeCircle implements Shape {
-  private double radius;
+  private String radius;
 
-  public ShapeCircle(double radius) {
+  public ShapeCircle(String radius) {
     this.radius = radius;
   }
 
-  public double getRadius() {
+  public String getRadius() {
     return radius;
   }
 
-  public void setRadius(double radius) {
+  public void setRadius(String radius) {
     this.radius = radius;
   }
 
   @Override
   public double calculateArea() {
-    return Math.PI * radius * radius;
+    return Math.PI * Math.pow(Double.parseDouble(radius), 2);
   }
 }
